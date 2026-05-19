@@ -1,0 +1,11 @@
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: nginx-cloud-run-service
+spec:
+  template:
+    spec:
+      containers:
+      - image: us-east1-docker.pkg.dev/devops-project-495401/docker-repo/nginx-app:v1.01
+        ports:
+        - containerPort: 8080
