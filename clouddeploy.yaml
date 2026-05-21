@@ -20,7 +20,7 @@ serialPipeline:
       profiles:
         - test
 
-    - targetId: production
+    - targetId: prod
       profiles:
         - prod
 
