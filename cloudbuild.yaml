@@ -22,8 +22,8 @@ steps:
 
         # 2. create the release to deploy image
 
-        gcloud deploy releases create release-${SHORT_SHA} \
-          --delivery-pipeline=nginx-app-cd-pipeline \
+        gcloud deploy releases create release-${_TAG} \
+          --delivery-pipeline=nginx-app-delivery-pipeline \
           --region=${_REGION} \
           --images=nginx-app=${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPOSITORY}/${_IMAGE}:${_TAG}
 
