@@ -14,12 +14,10 @@ steps:
         set -e
         # 1. create delivery pipeline
 
-        REGION="${_REGION}"
-
         gcloud deploy apply \
         --file=clouddeploy.yaml \
-        --region="$REGION" \
-        --project="${PROJECT_ID}"
+        --region=${_REGION} \
+        --project=$PROJECT_ID
 
         # 2. create the release to deploy image
 
