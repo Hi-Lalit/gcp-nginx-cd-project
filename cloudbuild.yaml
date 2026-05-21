@@ -3,6 +3,7 @@ substitutions:
   _REPOSITORY: 'docker-repo'
   _IMAGE: 'nginx-app'
   _LOG_BUCKET: 'devops_ci_logs'
+  _TAG: 'v1.01'
 
 steps:
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
