@@ -45,6 +45,14 @@ steps:
           --to-target=prod \
           --quiet
 
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    id: 'smoke-test'
+    entrypoint: 'bash'
+    args:
+    - '-c'
+    - |
+        set -e
+
         # 1. Fetch production URL from the correct region (us-east1)
 
         echo "Fetching production URL from us-east1..."
@@ -63,6 +71,5 @@ steps:
         else
           echo "Production smoke test passed successfully with status code: $$STATUS_CODE"
         fi
-
 
 logsBucket: 'gs://${_LOG_BUCKET}'
