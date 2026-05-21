@@ -7,6 +7,7 @@ substitutions:
 steps:
   # Step 1: Create a release in Google Cloud Deploy
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    id: delivery-pipeline
     entrypoint: 'gcloud'
     args:
       - 'deploy'
@@ -14,7 +15,7 @@ steps:
       - 'create'
       - 'release-$SHORT_SHA' 
       - '--delivery-pipeline=nginx-app-cd-pipeline'
-      - '--region=us-east1'
+      - '--region=${_REGION}'
       - '--images=nginx-app=${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_IMAGE}:$SHORT_SHA'
 
 logsBucket: 'gs://${_LOG_BUCKET}'
