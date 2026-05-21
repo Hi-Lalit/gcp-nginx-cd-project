@@ -47,6 +47,7 @@ steps:
 
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
     id: 'smoke-test'
+    waitFor: ['apply-and-deploy']
     entrypoint: 'bash'
     args:
     - '-c'
