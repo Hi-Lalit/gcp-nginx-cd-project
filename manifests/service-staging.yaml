@@ -1,7 +1,7 @@
 apiVersion: serving.knative.dev/v1
 kind: Service
 metadata:
-  name: nginx-cloud-run-service
+  name: nginx-staging
 spec:
   template:
     spec:

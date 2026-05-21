@@ -2,20 +2,55 @@ apiVersion: deploy.cloud.google.com/v1
 kind: DeliveryPipeline
 
 metadata:
-  name: nginx-app-cd-pipeline
+  name: nginx-app-delivery-pipeline
   labels:
     app: nginx-app
-    env: production
 
-description: "A delivery pipeline for deploying the nginx application to production."
+description: "Multi-stage delivery pipeline for nginx application deployment."
 
 suspended: false
 
 serialPipeline:
   stages:
-    - targetId: cloud-run-prod
+    - targetId: development
+      profiles:
+        - dev
+
+    - targetId: staging
+      profiles:
+        - test
+
+    - targetId: production
       profiles:
         - prod
+
+---
+apiVersion: deploy.cloud.google.com/v1
+kind: Target
+
+metadata:
+  name: development
+  labels:
+    app: nginx-app
+    env: development
+description: "This target will be use for dev environment."
+
+run:
+  location: projects/devops-project-495401/locations/us-east1
+
+---
+apiVersion: deploy.cloud.google.com/v1
+kind: Target
+
+metadata:
+  name: staging
+  labels:
+    app: nginx-app
+    env: staging
+description: "This target will be use for staging environment."
+
+run:
+  location: projects/devops-project-495401/locations/us-east1  
 
 ---
 
@@ -23,12 +58,11 @@ apiVersion: deploy.cloud.google.com/v1
 kind: Target
 
 metadata:
-  name: cloud-run-prod
+  name: prod
   labels:
     app: nginx-app
-    env: production
-
-description: "Deploying nginx application to Cloud Run in production environment"
+    env: prod
+description: "This target will be use for prod environment."
 
 run:
   location: projects/devops-project-495401/locations/us-east1

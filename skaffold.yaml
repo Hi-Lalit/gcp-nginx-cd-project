@@ -4,18 +4,25 @@ kind: Config
 metadata:
   name: nginx-app
 
-manifests:
-  rawYaml:
-    - service.yaml
-
-deploy:
-  cloudrun: {}
-
 profiles:
+  - name: dev
+    manifests:
+      rawYaml:
+        - manifests/service-dev.yaml
+    deploy:
+      cloudrun: {}
+
+  - name: test
+    manifests:
+      rawYaml:
+        - manifests/service-staging.yaml
+    deploy:
+      cloudrun: {}
+
   - name: prod
     manifests:
       rawYaml:
-        - service.yaml
+        - manifests/service-prod.yaml
     deploy:
       cloudrun: {}
       
