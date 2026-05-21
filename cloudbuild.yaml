@@ -5,17 +5,22 @@ substitutions:
   _LOG_BUCKET: 'devops_ci_logs'
 
 steps:
-  # Step 1: Create a release in Google Cloud Deploy
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
-    id: delivery-pipeline
+    id: 'create-delivry-pipeline'
     entrypoint: 'gcloud'
-    args:
-      - 'deploy'
-      - 'releases'
-      - 'create'
-      - 'release-$SHORT_SHA' 
-      - '--delivery-pipeline=nginx-app-cd-pipeline'
-      - '--region=${_REGION}'
-      - '--images=nginx-app=${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_IMAGE}:$SHORT_SHA'
+    script: |
+        # 1. create delivery pipeline
+
+        gcloud deploy apply \
+        --file=clouddeploy.yaml \
+        --region=${_REGION}
+        --project=${PROJECT_ID}
+
+        # 2. create the release to deploy image
+
+        gcloud deploy releases create release-${SHORT_SHA} \
+          --delivery-pipeline=nginx-app-cd-pipeline \
+          --region=${_REGION} \
+          --images=nginx-app=${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPOSITORY}/${_IMAGE}:${SHORT_SHA}
 
 logsBucket: 'gs://${_LOG_BUCKET}'
