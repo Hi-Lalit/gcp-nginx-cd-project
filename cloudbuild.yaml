@@ -45,4 +45,24 @@ steps:
           --to-target=prod \
           --quiet
 
+        # 1. Fetch production URL from the correct region (us-east1)
+
+        echo "Fetching production URL from us-east1..."
+        PROD_URL=$(gcloud run services describe nginx-prod \
+          --region=us-east1 \
+          --format='value(status.url)')
+
+        echo "Testing URL: $$PROD_URL"
+
+        # 2. Execute the curl smoke test
+        STATUS_CODE=$(curl -s -o /dev/null -w "%{http_code}" "$$PROD_URL")
+
+        if [ "$$STATUS_CODE" -ne 200 ]; then
+          echo "Smoke test failed with status code: $STATUS_CODE"
+          exit 1
+        else
+          echo "Production smoke test passed successfully with status code: 200"
+        fi
+
+
 logsBucket: 'gs://${_LOG_BUCKET}'
