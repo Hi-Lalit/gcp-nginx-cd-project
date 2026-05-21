@@ -1,3 +1,9 @@
+substitutions:
+  _REGION: 'us-east1'
+  _REPOSITORY: 'docker-repo'
+  _IMAGE: 'nginx-app'
+  _LOG_BUCKET: 'devops_ci_logs'
+
 steps:
   # Step 1: Create a release in Google Cloud Deploy
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
@@ -9,4 +15,6 @@ steps:
       - 'release-$SHORT_SHA' 
       - '--delivery-pipeline=nginx-app-cd-pipeline'
       - '--region=us-east1'
-      - '--images=nginx-app=us-east1-docker.pkg.dev/devops-project-495401/docker-repo/nginx-app:$SHORT_SHA'
+      - '--images=nginx-app=${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_IMAGE}:$SHORT_SHA'
+
+logsBucket: 'gs://${_LOG_BUCKET}'
