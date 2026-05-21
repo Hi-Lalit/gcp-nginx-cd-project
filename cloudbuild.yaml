@@ -7,7 +7,11 @@ substitutions:
 steps:
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
     id: 'apply-and-deploy'
-    script: |
+    entrypoint: 'bash'
+    args: 
+    - '-c'
+    - |
+        set -e
         # 1. create delivery pipeline
 
         REGION="${_REGION}"
