@@ -41,7 +41,7 @@ steps:
         gcloud deploy releases promote \
           --release=release-${SHORT_SHA} \
           --delivery-pipeline=nginx-app-delivery-pipeline \
-          --region=${_REGION}
+          --region=${_REGION} \
           --to-target=prod \
           --quiet
 
