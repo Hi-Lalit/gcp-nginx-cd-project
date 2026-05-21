@@ -57,7 +57,7 @@ steps:
         STATUS_CODE=$(curl -s -o /dev/null -w "%{http_code}" "$$PROD_URL")
 
         if [ "$$STATUS_CODE" -ne 200 ]; then
-          echo "Smoke test failed with status code: $STATUS_CODE"
+          echo "Smoke test failed with status code: $$STATUS_CODE"
           exit 1
         else
           echo "Production smoke test passed successfully with status code: 200"
