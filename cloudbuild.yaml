@@ -26,26 +26,20 @@ steps:
           --delivery-pipeline=nginx-app-delivery-pipeline \
           --region=${_REGION} \
           --images=nginx-app=${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPOSITORY}/${_IMAGE}:${_TAG}
+          --initial-rollout-wait-to-stable
 
-        # 3. promote the release to dev
 
-        gcloud deploy releases promote \
-          --release=release-${SHORT_SHA} \
-          --delivery-pipeline=nginx-app-delivery-pipeline \
-          --region=${_REGION}
-          --to-target=dev \
-          --quiet
 
-        # 4. promote the release from dev to staging
+        # 3. promote the release from dev to staging
 
         gcloud deploy releases promote \
           --release=release-${SHORT_SHA} \
           --delivery-pipeline=nginx-app-delivery-pipeline \
-          --region=${_REGION}
+          --region=${_REGION} \
           --to-target=staging \
           --quiet
 
-        # 5. promote the release from staging to prod
+        # 4. promote the release from staging to prod
 
         gcloud deploy releases promote \
           --release=release-${SHORT_SHA} \
