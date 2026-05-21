@@ -1,0 +1,12 @@
+steps:
+  # Step 1: Create a release in Google Cloud Deploy
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: 'gcloud'
+    args:
+      - 'deploy'
+      - 'releases'
+      - 'create'
+      - 'release-$SHORT_SHA' 
+      - '--delivery-pipeline=nginx-app-cd-pipeline'
+      - '--region=us-east1'
+      - '--images=nginx-app=us-east1-docker.pkg.dev/devops-project-495401/docker-repo/nginx-app:$SHORT_SHA'
