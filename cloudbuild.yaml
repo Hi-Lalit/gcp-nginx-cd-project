@@ -3,6 +3,7 @@ substitutions:
   _REPOSITORY: 'docker-repo'
   _IMAGE: 'nginx-app'
   _LOG_BUCKET: 'devops_ci_logs'
+  _TAG: 'v1.01'
 
 steps:
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
@@ -24,6 +25,6 @@ steps:
         gcloud deploy releases create release-${SHORT_SHA} \
           --delivery-pipeline=nginx-app-cd-pipeline \
           --region=${_REGION} \
-          --images=nginx-app=${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPOSITORY}/${_IMAGE}:${SHORT_SHA}
+          --images=nginx-app=${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPOSITORY}/${_IMAGE}:${_TAG}
 
 logsBucket: 'gs://${_LOG_BUCKET}'
