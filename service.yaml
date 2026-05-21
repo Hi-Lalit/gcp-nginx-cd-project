@@ -6,6 +6,6 @@ spec:
   template:
     spec:
       containers:
-      - image: us-east1-docker.pkg.dev/devops-project-495401/docker-repo/nginx-app
+      - image: nginx-app
         ports:
         - containerPort: 8080

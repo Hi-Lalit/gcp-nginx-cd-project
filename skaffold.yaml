@@ -16,3 +16,6 @@ profiles:
     manifests:
       rawYaml:
         - service.yaml
+    deploy:
+      cloudrun: {}
+      

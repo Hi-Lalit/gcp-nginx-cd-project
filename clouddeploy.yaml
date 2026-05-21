@@ -37,4 +37,4 @@ executionConfigs:
   - usages:
       - RENDER
       - DEPLOY
-    workerpool: ""
+    workerPool: ""
