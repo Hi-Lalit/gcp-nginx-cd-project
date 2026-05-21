@@ -25,10 +25,7 @@ steps:
         gcloud deploy releases create release-${SHORT_SHA} \
           --delivery-pipeline=nginx-app-delivery-pipeline \
           --region=${_REGION} \
-          --images=nginx-app=${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPOSITORY}/${_IMAGE}:${_TAG} \
-          --initial-rollout-wait-to-stable
-
-
+          --images=nginx-app=${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPOSITORY}/${_IMAGE}:${_TAG}
 
         # 3. promote the release from dev to staging
 
