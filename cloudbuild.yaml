@@ -60,7 +60,7 @@ steps:
           echo "Smoke test failed with status code: $$STATUS_CODE"
           exit 1
         else
-          echo "Production smoke test passed successfully with status code: 200"
+          echo "Production smoke test passed successfully with status code: $$STATUS_CODE"
         fi
 
 
