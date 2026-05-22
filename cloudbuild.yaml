@@ -45,7 +45,7 @@ steps:
           --to-target=prod \
           --quiet
 
-  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+  - name: 'curlimages/curl'
     id: 'smoke-test'
     waitFor: ['apply-and-deploy']
     entrypoint: 'bash'
