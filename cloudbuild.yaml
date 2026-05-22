@@ -48,7 +48,7 @@ steps:
   - name: 'curlimages/curl'
     id: 'smoke-test'
     waitFor: ['apply-and-deploy']
-    entrypoint: 'bash'
+    entrypoint: sh
     args:
     - '-c'
     - |
