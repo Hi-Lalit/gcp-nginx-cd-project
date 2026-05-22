@@ -45,7 +45,7 @@ steps:
           --to-target=prod \
           --quiet
 
-  - name: 'ubuntu:24.04'
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:slim'
     id: 'smoke-test'
     waitFor: ['apply-and-deploy']
     entrypoint: 'bash'
@@ -54,9 +54,9 @@ steps:
     - |
         set -e
 
-        # 1. Fetch production URL from the correct region (us-east1)
+        # 1. Fetch production URL
 
-        echo "Fetching production URL from us-east1..."
+        echo "Fetching production URL from us-east1"
         PROD_URL=$(gcloud run services describe nginx-prod \
           --region=us-east1 \
           --format='value(status.url)')
