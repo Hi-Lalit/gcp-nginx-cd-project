@@ -26,7 +26,7 @@ steps:
           --delivery-pipeline=nginx-app-delivery-pipeline \
           --region=${_REGION} \
           --images=nginx-app=${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPOSITORY}/${_IMAGE}:${_TAG}
-
+       
         # 3. promote the release from dev to staging
 
         gcloud deploy releases promote \
@@ -43,6 +43,14 @@ steps:
           --delivery-pipeline=nginx-app-delivery-pipeline \
           --region=${_REGION} \
           --to-target=prod \
+          --quiet
+
+        # 5. Allow prod environment url to public access
+
+        gcloud run services add-iam-policy-binding nginx-prod \
+          --region=${_REGION} \
+          --member="allUsers" \
+          --role="roles/run.invoker" \
           --quiet
 
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:slim'
