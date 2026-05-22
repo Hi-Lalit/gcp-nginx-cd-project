@@ -45,10 +45,10 @@ steps:
           --to-target=prod \
           --quiet
 
-  - name: 'curlimages/curl'
+  - name: 'ubuntu:24.04'
     id: 'smoke-test'
     waitFor: ['apply-and-deploy']
-    entrypoint: sh
+    entrypoint: 'bash'
     args:
     - '-c'
     - |
