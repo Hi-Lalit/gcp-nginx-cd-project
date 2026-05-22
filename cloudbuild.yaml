@@ -44,7 +44,19 @@ steps:
           --region=${_REGION} \
           --to-target=prod \
           --quiet
+        # wait upto 60 seconds to check production service created or not
+        
+        echo "checking production service created or not for upto 60 seconds"
 
+        for i in {1..12}; do
+          if gcloud run services describe nginx-prod --region=${_REGION} --project=$PROJECT_ID &>/dev/null; then
+            echo "Production service found "
+            break
+          fi
+          echo "Production still not created. checking for upto 60 seconds (Attempt $i/12)"
+          sleep 5
+        done
+        
         # 5. Allow prod environment url to public access
 
         gcloud run services add-iam-policy-binding nginx-prod \
