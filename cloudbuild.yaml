@@ -1,9 +1,9 @@
-substitutions:
-  _REGION: 'us-east1'
-  _REPOSITORY: 'docker-repo'
-  _IMAGE: 'nginx-app'
-  _LOG_BUCKET: 'devops_ci_logs'
-  _TAG: 'v1.01'
+# substitutions:
+#   _REGION: 'us-east1'
+#   _REPOSITORY: 'docker-repo'
+#   _IMAGE: 'nginx-app'
+#   _LOG_BUCKET: 'devops_ci_logs'
+#   _TAG: 'v1.0.1'
 
 steps:
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
@@ -53,7 +53,7 @@ steps:
             echo "Production service found "
             break
           fi
-          echo "Production still not created. checking for upto 60 seconds (Attempt $i/12)"
+          echo "Production service still not created. checking for upto 60 seconds (Attempt $i/12)"
           sleep 5
         done
         
