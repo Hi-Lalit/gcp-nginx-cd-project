@@ -63,6 +63,7 @@ metadata:
     app: nginx-app
     env: prod
 description: "This target will be use for prod environment."
+requireApproval: true
 
 run:
   location: projects/devops-project-495401/locations/us-east1
