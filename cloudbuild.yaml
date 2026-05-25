@@ -30,7 +30,7 @@ steps:
         # 3. promote the release from dev to staging
 
         gcloud deploy releases promote \
-          --release=release-${_TAG} \
+          --release=release-to-staging \
           --delivery-pipeline=nginx-app-delivery-pipeline \
           --region=${_REGION} \
           --to-target=staging \
@@ -39,7 +39,7 @@ steps:
         # 4. promote the release from staging to prod
 
         gcloud deploy releases promote \
-          --release=release-${_TAG} \
+          --release=release-to-prod \
           --delivery-pipeline=nginx-app-delivery-pipeline \
           --region=${_REGION} \
           --to-target=prod \
