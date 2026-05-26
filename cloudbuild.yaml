@@ -30,7 +30,7 @@ steps:
         # 3. promote the release from dev to staging
 
         gcloud deploy releases promote \
-          --release=release-${SHORT_SHA} \
+          --release=release-${SHORT_SHA}-${BUILD_ID} \
           --delivery-pipeline=nginx-app-delivery-pipeline \
           --region=${_REGION} \
           --to-target=staging \
@@ -39,7 +39,7 @@ steps:
         # 4. promote the release from staging to prod
 
         gcloud deploy releases promote \
-          --release=release-${SHORT_SHA} \
+          --release=release-${SHORT_SHA}-${BUILD_ID} \
           --delivery-pipeline=nginx-app-delivery-pipeline \
           --region=${_REGION} \
           --to-target=prod \
@@ -92,5 +92,20 @@ steps:
         else
           echo "Production smoke test passed successfully with status code: $$STATUS_CODE"
         fi
+
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    id: 'Cleanup local Docker images'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        set -e
+
+        echo "----------------------------------------------------------------------------------------------------------"
+        echo "Cleaning up local Docker images to free space"
+        echo "----------------------------------------------------------------------------------------------------------"
+
+        docker rmi ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_IMAGE}:${_TAG} || true
+        docker rmi $(docker images -q) || true
 
 logsBucket: 'gs://${_LOG_BUCKET}'
