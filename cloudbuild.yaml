@@ -98,7 +98,7 @@ steps:
           echo "Production smoke test passed successfully with status code: $$STATUS_CODE"
         fi
 
-  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+  - name: 'gcr.io/cloud-builders/docker'
     id: 'Cleanup local Docker images'
     entrypoint: 'bash'
     args:
@@ -111,6 +111,6 @@ steps:
         echo "----------------------------------------------------------------------------------------------------------"
 
         docker rmi ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_IMAGE}:${_TAG} || true
-        docker rmi $(docker images -q) || true
+       
 
 logsBucket: 'gs://${_LOG_BUCKET}'
