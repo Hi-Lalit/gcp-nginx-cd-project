@@ -59,6 +59,7 @@ steps:
             break
           fi
           echo "Production service still not created. checking for upto 60 seconds (Attempt $i/12)"
+          echo "check for approval to deploy to prod environment if you have set manual approval step in delivery pipeline"
           sleep 5
         done
         
