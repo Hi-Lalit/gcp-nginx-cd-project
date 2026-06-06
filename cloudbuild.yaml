@@ -1,0 +1,117 @@
+# substitutions:
+#   _REGION: 'us-east1'
+#   _REPOSITORY: 'docker-repo'
+#   _IMAGE: 'nginx-app'
+#   _LOG_BUCKET: 'devops_ci_logs'
+#   _TAG: 'v1.0.1'
+
+steps:
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    id: 'apply-and-deploy'
+    entrypoint: 'bash'
+    args: 
+    - '-c'
+    - |
+        set -e
+        # 1. create delivery pipeline
+
+        gcloud deploy apply \
+        --file=clouddeploy.yaml \
+        --region=${_REGION} \
+        --project=$PROJECT_ID
+
+        sleep 10
+
+        # 2. create the release to deploy image
+
+        gcloud deploy releases create release-${_RELEASE_ID} \
+          --delivery-pipeline=nginx-app-delivery-pipeline \
+          --region=${_REGION} \
+          --images=nginx-app=${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPOSITORY}/${_IMAGE}:${_TAG}
+       
+        echo "wait for 20 seconds for release creation"
+        sleep 20
+
+        # 3. promote the release from dev to staging
+
+        gcloud deploy releases promote \
+          --release=release-${_RELEASE_ID} \
+          --delivery-pipeline=nginx-app-delivery-pipeline \
+          --region=${_REGION} \
+          --to-target=staging \
+          --quiet
+
+        # 4. promote the release from staging to prod
+
+        gcloud deploy releases promote \
+          --release=release-${_RELEASE_ID} \
+          --delivery-pipeline=nginx-app-delivery-pipeline \
+          --region=${_REGION} \
+          --to-target=prod \
+          --quiet
+        # wait upto 60 seconds to check production service created or not
+        
+        echo "checking production service created or not for upto 60 seconds"
+
+        for i in {1..12}; do
+          if gcloud run services describe nginx-prod --region=${_REGION} --project=$PROJECT_ID &>/dev/null; then
+            echo "Production service found "
+            break
+          fi
+          echo "Production service still not created. checking for upto 60 seconds (Attempt $i/12)"
+          echo "check for approval to deploy to prod environment if you have set manual approval step in delivery pipeline"
+          sleep 5
+        done
+        
+        # 5. Allow prod environment url to public access
+
+        gcloud run services add-iam-policy-binding nginx-prod \
+          --region=${_REGION} \
+          --member="allUsers" \
+          --role="roles/run.invoker" \
+          --quiet
+
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:slim'
+    id: 'smoke-test'
+    waitFor: ['apply-and-deploy']
+    entrypoint: 'bash'
+    args:
+    - '-c'
+    - |
+        set -e
+
+        # 1. Fetch production URL
+
+        echo "Fetching production URL from us-east1"
+        PROD_URL=$(gcloud run services describe nginx-prod \
+          --region=us-east1 \
+          --format='value(status.url)')
+
+        echo "Testing URL: $$PROD_URL"
+
+        # 2. Execute the curl smoke test
+        STATUS_CODE=$(curl -s -o /dev/null -w "%{http_code}" "$$PROD_URL")
+
+        if [ "$$STATUS_CODE" -ne 200 ]; then
+          echo "Smoke test failed with status code: $$STATUS_CODE"
+          exit 1
+        else
+          echo "Production smoke test passed successfully with status code: $$STATUS_CODE"
+        fi
+
+  - name: 'gcr.io/cloud-builders/docker'
+    id: 'Cleanup local Docker images'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        set -e
+
+        echo "----------------------------------------------------------------------------------------------------------"
+        echo "Cleaning up local Docker images to free space"
+        echo "----------------------------------------------------------------------------------------------------------"
+
+        docker rmi ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_IMAGE}:${_TAG} || true
+       
+
+logsBucket: 'gs://${_LOG_BUCKET}'

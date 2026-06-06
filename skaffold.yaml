@@ -1,0 +1,28 @@
+apiVersion: skaffold/v4beta7
+kind: Config
+
+metadata:
+  name: nginx-app
+
+profiles:
+  - name: dev
+    manifests:
+      rawYaml:
+        - manifests/service-dev.yaml
+    deploy:
+      cloudrun: {}
+
+  - name: test
+    manifests:
+      rawYaml:
+        - manifests/service-staging.yaml
+    deploy:
+      cloudrun: {}
+
+  - name: prod
+    manifests:
+      rawYaml:
+        - manifests/service-prod.yaml
+    deploy:
+      cloudrun: {}
+      

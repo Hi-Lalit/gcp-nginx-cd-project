@@ -1,0 +1,11 @@
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: nginx-staging
+spec:
+  template:
+    spec:
+      containers:
+      - image: nginx-app
+        ports:
+        - containerPort: 8080
